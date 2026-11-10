@@ -1,0 +1,17 @@
+{
+  "name": "studysmarter",
+  "displayName": "StudySmarter",
+  "version": "1.0.0",
+  "description": "Plan and build study plans, flashcards and lessons in your StudySmarter account from Claude, then learn them in the StudySmarter app.",
+  "author": {
+    "name": "StudySmarter GmbH",
+    "url": "https://www.studysmarter.co.uk"
+  },
+  "homepage": "https://www.studysmarter.co.uk",
+  "license": "Proprietary",
+  "keywords": ["study plan", "flashcards", "exam prep", "spaced repetition", "learning", "lecture notes"],
+  "documentationUrl": "https://studysmarter.zendesk.com/hc/en-gb/articles/31717016070300",
+  "supportUrl": "https://studysmarter.zendesk.com/hc/en-gb/articles/31717016070300",
+  "privacyPolicyUrl": "https://www.studysmarter.co.uk/privacy/",
+  "termsOfServiceUrl": "https://www.studysmarter.co.uk/terms/"
+}

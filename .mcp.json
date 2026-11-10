@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "studysmarter": {
+      "type": "http",
+      "url": "https://mcp.studysmarter.de/mcp"
+    }
+  }
+}
