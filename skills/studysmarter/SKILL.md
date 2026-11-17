@@ -1,6 +1,6 @@
 ---
 name: studysmarter
-description: Plan and build study plans, flashcards and lessons in the learner's StudySmarter account with the StudySmarter tools. Use when the learner wants to prepare for an exam, turn material into flashcards, or plan when to study what; they learn in the StudySmarter app.
+description: Plan and build study plans, flashcards and lessons in the learner's StudySmarter account with the StudySmarter tools. Use when the learner wants to prepare for an exam, turn material into flashcards, plan when to study what, or change their existing StudySmarter cards, including adding an image to a card (cards are text only); they learn in the StudySmarter app.
 ---
 
 # Building study plans in StudySmarter
@@ -9,49 +9,64 @@ The learner plans and builds here; they learn in the StudySmarter app (spaced re
 tests). A **study plan** is a study set with an outline of chapters and lessons, each lesson holding flashcards and
 the slides that teach them, plus the due dates you plan. A study set without an outline is a plain flashcard set.
 
-## Workflow
+## Always
 
-1. **Look first.** `get_study_overview` shows the study sets the learner created, their exam dates and plans. Reuse a
-   matching set instead of creating a duplicate; ask when unsure. Sets the learner only contributes to or saved in the
-   app are not reachable here; when a tool says so, tell the learner they find that set in the app.
-2. **Clarify the basics, once.** Whatever the learner has not said yet: the goal (the exam and its type, or what
-   they want to be able to do), the topics it covers and where it ends, their starting point (prior knowledge,
-   depth), what they find hardest, and the schedule (exam date, time per week, start day). Keep the questions light
-   and conversational: a few at a time, each with a suggested default the learner can just confirm. Short forms or
-   step-by-step choices are fine when they make answering easier; avoid one long questionnaire. Ask even when the
-   learner asks to create the plan right away; skip it only when they gave goal, topics and schedule already, or
-   said to skip questions. Never ask twice. Then propose the outline in the chat, and create it once the learner
-   agrees. Preview the plan in whatever format reads best, but only show what the learner will find in the app: no
-   images, covers or features StudySmarter doesn't have.
+- **Start with `get_study_overview`.** It tells you who the learner is (school or university, class level, language,
+  Premium) and which study sets they already have, with their exam dates and plans. Use it to ask fewer and sharper
+  questions, and to offer an existing set instead of a new one; ask when unsure. Only sets the learner created are
+  reachable here. Sets they only contribute to, saved or got shared are not, and sharing a set does not make it
+  reachable: never promise access once someone shares theirs. Tell the learner they find such a set in the app.
+- **Numbers come from the tools.** Report counts of cards, lessons or sets only as a tool returned them
+  (`cards_total`, `total`, the ids a call returned), never estimated or summed from memory or a first page.
+- If the learner is unhappy with the quality, suggest a higher thinking mode once more.
+
+## Creating a study plan
+
+1. **Clarify the basics, once.** Whatever the learner has not said yet: the goal (the exam and its type, or what they
+   want to be able to do), the topics it covers and where it ends, their starting point (prior knowledge, depth),
+   what they find hardest, and the schedule (exam date, time per week, start day). Ask in the conversation, one or
+   two questions at a time, each with a suggested default the learner can just confirm. Ask even when the learner
+   asks to create the plan right away; skip it only when they gave goal, topics and schedule already, or said to skip
+   questions. Never ask twice. Suggest once to use a higher thinking mode, since it gives better plans.
+2. **Preview the outline** in the chat, in whatever format reads best, but only show what the learner will find in
+   the app: no images, covers or features StudySmarter doesn't have. Create it once the learner agrees.
 3. **Create the plan.** `create_study_plan` with name, study goal, exam date, outline and the files the learner shared
    (`files`). Every chapter needs at least one lesson; aim for 3-8 chapters with 2-6 lessons each, ordered the way the
    learner should study. Its `materials` give each file's `material_id`, so the cards built from a file cite it.
+   Schedule in the same call: a `due_date` per lesson and a `test_due_date` per chapter. Everything, chapter tests and
+   the final review included, is due by the day before the exam at the latest; the exam day itself only when the
+   learner wants that, e.g. for an evening exam. Never move the exam date to make a plan fit. The first lesson is due
+   today, so there is something to do right away, unless the learner wants to start later. Leave room for review
+   before the exam. Dates the learner gives are binding. The study days and time per week they named are a limit:
+   when the plan does not fit into them, explain the conflict and agree on a way out (more time, less scope, other
+   priorities) before scheduling more. After saving, check the dates in the result. Tell the learner the plan and
+   its dates can be changed later.
 4. **Fill the chapters, ahead of the learner.** A new outline's lessons are empty, and the app cannot open a chapter
    without cards, so an empty chapter is a dead end the learner can only leave by coming back to you. Fill a chapter
    completely: for every lesson, first `create_flashcards` with its `lesson_id`, then `write_lesson`, whose slides
-   teach, cite and check those cards, with a check on every slide and a figure on most. A plan of up to 3 chapters gets filled right away.
-   For a longer one, ask the learner once whether to fill all chapters now, which takes a while, or the first two now and the rest as they go
-   on; without an answer, fill the first two, and always keep the chapter after the one the learner is in filled.
+   teach, cite and check those cards, with a check on every slide and a figure on most. Fill the first chapter right
+   away. Then ask the learner whether to fill the remaining chapters now, which takes a while, or as they go on, so
+   later chapters can adapt to their progress.
 5. **Check.** `get_study_plan` shows `is_filled` per chapter, and per lesson `cards_total` and `is_written`.
-   Fill what is still empty before you hand over.
-6. **Schedule.** Set a `due_date` per lesson and a `test_due_date` per chapter with `update_study_plan`, ending
-   before the exam date. The first lesson is due today, so there is something to do right away, unless the learner
-   wants to start later. Leave room for review before the exam. Dates the learner gives are binding.
-7. **Hand over.** Tell the learner the plan is in the StudySmarter app, ready to learn, and show its `app_link`:
-   it opens the plan in the app, on a phone in the installed app. `get_study_overview` gives the link of every set.
+   Fill what is still empty in the chapters agreed on before you hand over.
+6. **Hand over.** Tell the learner the plan is in the StudySmarter app, ready to learn, and show its `app_link`,
+   which opens the plan in the app. `get_study_overview` gives the link of every set.
 
 ## Replanning
 
-- Whenever the learner comes back, check `is_filled` first and fill the next empty chapter before the learner
-  reaches it.
-- Read before you replan. `get_study_plan` shows per lesson the `due_date`, completion, `cards_practiced`,
-  `cards_with_mistakes`, `cards_memorized` and `cards_mastered`, and per chapter the `test_due_date`, every entry of
-  `test_attempts` and the `cards_to_review`. Memorized takes several right answers in spaced repetition, so few
-  memorized cards right after a first session are normal, not a problem. Then call `get_lesson` for the lessons with
-  mistakes or weak tests: per card its `progress` gives the `wrong_answers` and `unsure_answers`, the
-  `recent_answers` with any misconception, and `next_review_at`.
+- Whenever the learner comes back, check their progress and whether they are on track with the plan.
+  `get_study_plan` shows per lesson the `due_date`, completion, `cards_practiced`, `cards_with_mistakes`,
+  `cards_memorized` and `cards_mastered`, and per chapter the `test_due_date`, every entry of `test_attempts` and the
+  `cards_to_review`. Memorized takes several right answers in spaced repetition, so few memorized cards right after a
+  first session are normal, not a problem. Then call `get_lesson` for the lessons with mistakes or weak tests: per
+  card its `progress` gives the `wrong_answers` and `unsure_answers`, the `recent_answers` with any misconception, and
+  `next_review_at`. Based on that, suggest adapting the plan or filling the next empty chapter (`is_filled`), and act
+  once the learner agrees.
 - Base the change on that: add review lessons or cards for what had mistakes or tested badly, give a struggling
   chapter more time, move open lessons, and do not move what is done. Tell the learner what the data showed.
+- An earlier exam is no permission to study more: keep within the study days and time per week the learner named.
+  If the plan no longer fits, explain the conflict and agree on more time, less scope or other priorities before you
+  schedule a denser plan.
 - `update_study_plan` takes the complete outline in order: existing chapters and lessons by `chapter_id` and
   `lesson_id`, new ones without.
   Every existing chapter and lesson must appear; to drop some, use `remove_from_study_plan` (their cards stay in the
@@ -71,8 +86,10 @@ the slides that teach them, plus the due dates you plan. A study set without an 
   tables and fenced code blocks, which name their language (```` ```python ````). The front is one line.
 - Math on cards is raw LaTeX: inline `\( ... \)`, display `\[ ... \]`, fractions with `\frac{a}{b}`. Never single
   `$` on a card; lesson slides use `$...$` instead (see Lessons).
-- Cards are text only: images cannot be added here. When the learner asks for some, say so; they can add images to a
-  card in the app.
+- Cards are text only: images cannot be added here. When the learner asks to add an image to a card, your first reply
+  says so: the card stays unchanged, and they can add the image to the card in the StudySmarter app. Do not generate
+  an image instead of answering. You may offer to create one separately afterwards, but never present it as added to
+  the card.
 - Texts the learner formatted in the app (colours, styled tables, images, formula boxes) read as plain text and can only be
   edited in the app; `update_flashcards` skips them with that reason, and their tags and lesson still change.
 - Do not address the learner in the card text.
@@ -80,6 +97,8 @@ the slides that teach them, plus the due dates you plan. A study set without an 
   The app shows it with the card. Only materials of the card's study set count.
 - At most 100 cards per call. Use tags sparingly, for themes that cut across lessons.
 - Prefer `update_flashcards` over deleting and recreating, so the learner's progress on a card is kept.
+- Cards added to a lesson that is already written (`is_written`) are not taught on its slides yet. Rewrite that
+  lesson with `write_lesson` so every card is taught and cited, or offer to when the learner only asked for cards.
 
 ## Lessons
 
@@ -98,10 +117,10 @@ what is written so far.
   explain the same idea; a heading that needs "and" is two slides. Parallel items (capitals, organelles, dates) are
   each named and explained, two or three to a slide. Build each slide on the one before; never repeat one. Bold the
   key term once.
-- **Reading level:** pupils up to class 10 get 50-70 words, sentences of at most 15 words, every term explained in
-  everyday words and at most one new term per slide (in German "du"); pupils from class 11, trainees and adults
-  sentences of at most 20 words; university students the field's terms, sentences of at most 25 words. Only the
-  wording changes; every card is still taught.
+- **Reading level:** take it from `learner` in `get_study_overview` (class level, school or university). Pupils up to
+  class 10 get 50-70 words, sentences of at most 15 words, every term explained in everyday words and at most one new
+  term per slide (in German "du"); pupils from class 11, trainees and adults sentences of at most 20 words; university
+  students the field's terms, sentences of at most 25 words. Only the wording changes; every card is still taught.
 - **Citations:** cite every claim from a card with `[@flashcard_id]` at the end of its sentence; every card is cited on
   some slide. Never in code or backticks. Add no facts the cards do not support, and do not mention flashcards or ids
   in the text.
@@ -112,7 +131,8 @@ what is written so far.
   Fit the type to the idea and vary the types across the lesson:
   - `apply`, for the rest: 3-4 options, exactly one correct. For a rule or mechanism, a short new case the learner
     applies it to; for a plain fact, the question asked directly with close, plausible alternatives, never wrapped in
-    an invented scenario. Never quote a card as an option.
+    an invented scenario. Never quote a card as an option. Wrong options are plausible confusions from the material,
+    written for this check; never generic filler, and never the same ones reused across checks.
   - `sort`, where the idea is a distinction between two or three concepts: 2-3 groups, 4-6 new examples in all, each
     in exactly one; without that many clear examples, use `apply`.
   - `order`, only where the idea itself is a real sequence: its 3-6 steps in the correct order, 2-8 words each.
@@ -165,5 +185,6 @@ and similar files are converted to PDF. Storing does not read the file for you: 
 
 ## Limits
 
-On the free plan, the learner can create a limited number of study sets, as in the app. When a tool says the limit is
-reached, relay its explanation plainly, without links, and do not push an upgrade.
+On the free plan, the learner can create a limited number of study sets, as in the app. When a tool says the study
+set limit is reached, tell the learner that StudySmarter Premium in the app removes it, or that they can add to an
+existing set or delete one.
