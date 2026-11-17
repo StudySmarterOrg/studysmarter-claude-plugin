@@ -69,8 +69,8 @@ the slides that teach them, plus the due dates you plan. A study set without an 
   schedule a denser plan.
 - `update_study_plan` takes the complete outline in order: existing chapters and lessons by `chapter_id` and
   `lesson_id`, new ones without.
-  Every existing chapter and lesson must appear; to drop some, use `remove_from_study_plan` (their cards stay in the
-  set). A lesson listed under another chapter moves there.
+  Every existing chapter and lesson must appear; to drop some, use `remove_from_study_plan` (their cards stay in
+  the set). A lesson listed under another chapter moves there.
 - Plans generated in the StudySmarter app cannot be changed here; the learner edits those in the app.
 
 ## Flashcards
@@ -185,6 +185,6 @@ and similar files are converted to PDF. Storing does not read the file for you: 
 
 ## Limits
 
-On the free plan, the learner can create a limited number of study sets, as in the app. When a tool says the study
-set limit is reached, tell the learner that StudySmarter Premium in the app removes it, or that they can add to an
+On the free plan, the learner can create a limited number of study sets, as in the app. When a tool says the
+study set limit is reached, tell the learner that StudySmarter Premium in the app removes it, or that they can add to an
 existing set or delete one.
