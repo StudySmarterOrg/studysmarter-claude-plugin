@@ -1,6 +1,6 @@
 # StudySmarter for Claude
 
-Plan and build your studies in Claude, then learn in the StudySmarter app. Tell Claude what you're studying for and share your slides or notes, and it builds a study set in your StudySmarter account: a learn path with chapters and lessons, flashcards that cite your material, and study dates leading up to your exam. Come back any time to fill the next chapter, add flashcards or replan when your exam moves.
+Plan and build your studies in Claude, then learn in the StudySmarter app. Tell Claude what you're studying for and share your slides or notes, and it builds a study set in your StudySmarter account: a learn path with chapters and lessons, flashcards based on your material, and study dates leading up to your exam. Come back any time to fill the next chapter, add flashcards or replan when your exam moves.
 
 ## What's inside
 
@@ -11,7 +11,7 @@ Plan and build your studies in Claude, then learn in the StudySmarter app. Tell 
 
 1. Install the plugin and connect StudySmarter.
 2. Sign in to StudySmarter, or create an account, and approve the permissions.
-3. Ask Claude, for example: "My exam is on 15 February. Here are my lecture slides, build me a study plan."
+3. Ask Claude, for example: "My anatomy exam is in six weeks. Here are my lecture notes. Help me prepare: ask me what you need to know first, then build my study plan."
 
 ## Help and privacy
 
