@@ -8,6 +8,7 @@
     "url": "https://www.studysmarter.co.uk"
   },
   "homepage": "https://www.studysmarter.co.uk",
+  "repository": "https://github.com/StudySmarterOrg/studysmarter-claude-plugin",
   "license": "Proprietary",
   "keywords": ["study plan", "flashcards", "exam prep", "spaced repetition", "learning", "lecture notes"],
   "documentationUrl": "https://studysmarter.zendesk.com/hc/en-gb/articles/31717016070300",
